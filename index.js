@@ -128,7 +128,7 @@ app.post("/create-checkout", async (req, res) => {
   const hiredApplicantStripeID = req.body[0].workerStripeID;
   const confirmedPrice = parseInt(req.body[1].confirmedPrice);
   // const applicationFee = req.body[2].applicationFee;
-  const applicationFee = parseInt(req.body[1].confirmedPrice * 0.1)
+  const applicationFee = parseInt(req.body[1].confirmedPrice * 0.13)
 
   console.log(applicationFee, confirmedPrice)
 
