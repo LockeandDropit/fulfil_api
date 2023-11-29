@@ -1,11 +1,13 @@
 // taken from https://github.com/nathvarun/Expo-Stripe-Tutorial
 
+
+
 import express from "express";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-console.log(process.env.STRIPE_SECRET_KEY);
+
 
 const app = express();
 const port = 3000; //add your port here
@@ -19,12 +21,14 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-08-01",
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Example app listening at http://localhost:${port}`);
+// });
 
 app.post("/create-payment-intent", async (req, res) => {
   console.log("this is body", req.body);
+
+  //help from https://www.youtube.com/@cjav_dev
 
   const setPrice = req.body.price;
   try {
@@ -56,7 +60,7 @@ app.post("/test", async (req, res) => {
 app.post("/create-stripe-account", async (req, res) => {
   // console.log("coming through?",req)
   try {
-    //create account
+    //create account... help from https://www.youtube.com/@cjav_dev
 
     const account = await stripe.accounts.create({
       country: "US",
@@ -124,6 +128,8 @@ app.post("/verify-stripe-account", async (req, res) => {
 
 const testPrice = { price: 1000 };
 
+//help from https://www.youtube.com/@cjav_dev
+
 app.post("/create-checkout", async (req, res) => {
   console.log("This is the job info", req.body[0]);
 
@@ -167,3 +173,17 @@ app.post("/create-checkout", async (req, res) => {
 
   res.json({ session: session });
 });
+
+
+
+app.post("/check-payment-status", async (req, res) => {
+  console.log("its hitting", req.body.paymentId)
+  const checkoutSessionID = req.body.paymentId
+  const session = await stripe.checkout.sessions.retrieve(
+   checkoutSessionID
+  );
+
+
+  res.json({ session: session })
+
+})
