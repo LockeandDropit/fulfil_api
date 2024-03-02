@@ -1,15 +1,13 @@
 // taken from https://github.com/nathvarun/Expo-Stripe-Tutorial
 
-
-
 import express from "express";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-
-
 const app = express();
+//for testing, remove when done
+app.listen(3000)
 const port = 3000; //add your port here
 
 app.use(express.json());
@@ -17,13 +15,15 @@ app.use(express.urlencoded({ extended: true }));
 
 import Stripe from "stripe";
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY, {
+// const stripe = Stripe(process.env.STRIPE_SECRET_KEY, {
+//   apiVersion: "2022-08-01",
+// });
+
+const stripe = Stripe(process.env.STRIPE_TEST_KEY, {
   apiVersion: "2022-08-01",
 });
 
-// app.listen(port, () => {
-//   console.log(`Example app listening at http://localhost:${port}`);
-// });
+console.log("hello")
 
 app.post("/create-payment-intent", async (req, res) => {
   console.log("this is body", req.body);
@@ -69,9 +69,17 @@ app.post("/create-stripe-account", async (req, res) => {
         card_payments: {
           requested: true,
         },
+        settings: {
+          payouts: {
+            schedule: {
+              interval: "manual"
+            },
+          },
+        },
         transfers: {
           requested: true,
         },
+        
         tax_reporting_us_1099_k: {
           requested: true,
         },
@@ -131,16 +139,20 @@ const testPrice = { price: 1000 };
 //help from https://www.youtube.com/@cjav_dev
 
 app.post("/create-checkout", async (req, res) => {
-  console.log("This is the job info", req.body[0]);
+  console.log("This is the job info", req.body);
 
   const hiredApplicantStripeID = req.body[0].workerStripeID;
   const confirmedPrice = parseInt(req.body[1].confirmedPrice);
   // const applicationFee = req.body[2].applicationFee;
-  const applicationFee = parseInt(req.body[1].confirmedPrice * 0.13)
+  const applicationFee = parseInt(req.body[1].confirmedPrice * 0.13);
+  const doerUID = req.body[2].doerUID;
+  const jobID = req.body[3].jobID
+   const neederUID = req.body[4].neederUID;
 
-  console.log(applicationFee, confirmedPrice)
+  console.log(applicationFee, confirmedPrice);
 
-  
+
+  try {
 
   const session = await stripe.checkout.sessions.create({
     success_url: "https://shimmering-snickerdoodle-9c6d0b.netlify.app/",
@@ -159,12 +171,18 @@ app.post("/create-checkout", async (req, res) => {
       },
     ],
     mode: "payment",
+    metadata: {
+      confirmedPrice: confirmedPrice,
+      doerUID: doerUID,
+      neederUID: neederUID,
+      jobID: jobID
+    },
     payment_intent_data: {
       application_fee_amount: applicationFee,
       transfer_data: {
-        destination: hiredApplicantStripeID
-      }
-    }
+        destination: hiredApplicantStripeID,
+      },
+    },
   });
 
   // return session
@@ -172,18 +190,19 @@ app.post("/create-checkout", async (req, res) => {
   console.log(session.url);
 
   res.json({ session: session });
+
+} catch (err) {
+  console.log("error Im looking for", err);
+  res.json({ error: err });
+}
+ 
 });
 
-
-
 app.post("/check-payment-status", async (req, res) => {
-  console.log("its hitting", req.body.paymentId)
-  const checkoutSessionID = req.body.paymentId
-  const session = await stripe.checkout.sessions.retrieve(
-   checkoutSessionID
-  );
+  console.log("its hitting", req.body.paymentId);
+  const checkoutSessionID = req.body.paymentId;
+  const session = await stripe.checkout.sessions.retrieve(checkoutSessionID);
 
+  res.json({ session: session });
+});
 
-  res.json({ session: session })
-
-})
