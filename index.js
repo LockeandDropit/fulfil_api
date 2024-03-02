@@ -15,13 +15,13 @@ app.use(express.urlencoded({ extended: true }));
 
 import Stripe from "stripe";
 
-// const stripe = Stripe(process.env.STRIPE_SECRET_KEY, {
-//   apiVersion: "2022-08-01",
-// });
-
-const stripe = Stripe(process.env.STRIPE_TEST_KEY, {
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-08-01",
 });
+
+// const stripe = Stripe(process.env.STRIPE_TEST_KEY, {
+//   apiVersion: "2022-08-01",
+// });
 
 console.log("hello")
 
