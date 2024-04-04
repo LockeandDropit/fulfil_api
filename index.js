@@ -322,6 +322,7 @@ app.post("/create-checkout-web-embedded", async (req, res) => {
   const doerUID = req.body[2].doerUID;
   const jobID = req.body[3].jobID;
   const neederUID = req.body[4].neederUID;
+  const jobTitle = req.body[5].jobTitle
 
   console.log(applicationFee, confirmedPrice);
 
@@ -349,6 +350,7 @@ app.post("/create-checkout-web-embedded", async (req, res) => {
         doerUID: doerUID,
         neederUID: neederUID,
         jobID: jobID,
+        jobTitle: jobTitle
       },
       payment_intent_data: {
         application_fee_amount: applicationFee,
@@ -360,10 +362,14 @@ app.post("/create-checkout-web-embedded", async (req, res) => {
       "http://localhost:3001/NeederInReviewList/?session_id={CHECKOUT_SESSION_ID}",
     });
 
+
+  
+
+
     // return session
     res.send({clientSecret: session.client_secret});
-    // res.json({client_secret: session.client_secret});
-    console.log(session.client_secret)
+    
+    console.log(session.metadata.jobTitle)
   } catch (err) {
     console.log("error Im looking for", err);
     res.json({ error: err });
@@ -374,8 +380,11 @@ app.get('/session-status', async (req, res) => {
   const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
 console.log("hirt")
   res.send({
+    userID : session.metadata.neederUID,
+    jobTitle: session.metadata.jobTitle,
     status: session.status,
-    customer_email: session.customer_details.email
+    customer_email: session.customer_details.email,
+    confirmedPrice: session.metadata.confirmedPrice
   });
 });
 
