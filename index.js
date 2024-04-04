@@ -160,9 +160,9 @@ app.post("/create-stripe-account", async (req, res) => {
       accountLink: accountLink,
       accountID: account.id,
     });
-    console.log(JSON.stringify(accountLink));
-    console.log(JSON.stringify(account.id));
-    console.log(JSON.stringify(account));
+    // console.log(JSON.stringify(accountLink));
+    // console.log(JSON.stringify(account.id));
+    // console.log(JSON.stringify(account));
     console.log("hit");
   } catch (err) {
     console.log(err);
@@ -175,11 +175,17 @@ app.post("/create-stripe-account", async (req, res) => {
 //verify stripe account is complete
 app.post("/verify-stripe-account", async (req, res) => {
   //consume accountID from FB
-  const stripeID = req.body.id;
+  //muted one was for mobile, live one is web
+  // const stripeID = req.body.id;
+
+  //this one is for web
+  const stripeID = req.body.stripeID
+  console.log("stripe id from server", req.body.stripeID)
 
   const account = await stripe.accounts.retrieve(stripeID);
 
-  console.log("this is whole body", account);
+
+console.log("account from verification",account)
   console.log(
     "this is to check if account is verified payments",
     account.charges_enabled
@@ -388,9 +394,7 @@ console.log("hirt")
   });
 });
 
-app.get("/", async (req, res) => {
-  console.log("hit");
-});
+
 
 app.post("/check-payment-status", async (req, res) => {
   console.log("its hitting", req.body.paymentId);
