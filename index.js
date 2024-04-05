@@ -8,11 +8,11 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:3001",
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:3001",
+//   })
+// );
 //for testing, remove when done
 app.listen(3000);
 const port = 3000; //add your port here
@@ -21,14 +21,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 import Stripe from "stripe";
+import { log } from "util";
 
-// const stripe = Stripe(process.env.STRIPE_SECRET_KEY, {
-//   apiVersion: "2022-08-01",
-// });
-
-const stripe = Stripe(process.env.STRIPE_TEST_KEY, {
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-08-01",
 });
+
+// const stripe = Stripe(process.env.STRIPE_TEST_KEY, {
+//   apiVersion: "2022-08-01",
+// });
 
 console.log("hello");
 
@@ -86,21 +87,15 @@ app.post("/create-stripe-account-web", async (req, res) => {
           requested: true,
         },
       },
-      settings: {
-        payouts: {
-          schedule: {
-            interval: "manual",
-          },
-        },
-      },
+   
     });
 
     //create account link
-
+    // return_url: "http://localhost:3001/DoerAccountManager",
     const accountLink = await stripe.accountLinks.create({
       account: account.id,
-      refresh_url: "http://localhost:3001/DoerAccountManager",
-      return_url: "http://localhost:3001/DoerAccountManager",
+      refresh_url: "https:/getfulfil.com/DoerAccountManager",
+      return_url: "https:/getfulfil.com/DoerAccountManager",
       type: "account_onboarding",
     });
 
@@ -118,6 +113,8 @@ app.post("/create-stripe-account-web", async (req, res) => {
   }
 });
 
+
+
 app.post("/create-stripe-account", async (req, res) => {
   // console.log("coming through?",req)
   try {
@@ -130,13 +127,7 @@ app.post("/create-stripe-account", async (req, res) => {
         card_payments: {
           requested: true,
         },
-        settings: {
-          payouts: {
-            schedule: {
-              interval: "manual",
-            },
-          },
-        },
+     
         transfers: {
           requested: true,
         },
@@ -146,6 +137,15 @@ app.post("/create-stripe-account", async (req, res) => {
         },
       },
     });
+
+    //took this out of creat-stripe-account
+    // settings: {
+    //   payouts: {
+    //     schedule: {
+    //       interval: "manual",
+    //     },
+    //   },
+    // },
 
     //create account link
 
@@ -277,8 +277,8 @@ app.post("/create-checkout-web", async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.create({
       success_url:
-        "http://localhost:3001/NeederPaymentComplete/success?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "http://localhost:3001/NeederInReviewList",
+        "https:/getfulfil.com/NeederPaymentComplete/success?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https:/getfulfil.com/NeederInReviewList",
       payment_method_types: ["card"],
       line_items: [
         {
@@ -365,7 +365,7 @@ app.post("/create-checkout-web-embedded", async (req, res) => {
         },
       },
       return_url:
-      "http://localhost:3001/NeederInReviewList/?session_id={CHECKOUT_SESSION_ID}",
+      "https:/getfulfil.com/NeederInReviewList/?session_id={CHECKOUT_SESSION_ID}",
     });
 
 
@@ -395,6 +395,17 @@ console.log("hirt")
 });
 
 
+app.post("/stripe-log-in", async (req, res) => {
+  const stripeID = req.body.stripeID
+  console.log("stripe id from server", req.body.stripeID)
+
+  const loginLink = await stripe.accounts.createLoginLink(stripeID);
+
+  res.send({
+    loginLink : loginLink.url
+  })
+  console.log("server data",loginLink)
+})
 
 app.post("/check-payment-status", async (req, res) => {
   console.log("its hitting", req.body.paymentId);
