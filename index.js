@@ -10,9 +10,15 @@ const app = express();
 
 // app.use(
 //   cors({
-//     origin: "http://localhost:3001",
+//     origin: "http://localhost:3000",
 //   })
 // );
+
+app.use(
+  cors({
+    origin: "https://getfulfil.com",
+  })
+);
 //for testing, remove when done
 app.listen(4242);
 // const port = 3000; //add your port here
