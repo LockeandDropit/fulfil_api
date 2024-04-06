@@ -14,7 +14,7 @@ const app = express();
 //   })
 // );
 //for testing, remove when done
-// app.listen(3000);
+app.listen(4242);
 // const port = 3000; //add your port here
 
 app.use(express.json());
