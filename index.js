@@ -16,7 +16,7 @@ const app = express();
 
 app.use(
   cors ({
-    origin: 'https://getfulfil2.netlify.app',
+    origin: 'https://6611b37da1c26a2ac4a231e2--getfulfil.netlify.app',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   })
 );
