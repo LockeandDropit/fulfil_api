@@ -15,10 +15,13 @@ const app = express();
 // );
 
 app.use(
-  cors()
+  cors ({
+    origin: 'https://getfulfil2.netlify.app/',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  })
 );
 //for testing, remove when done
-// app.listen(4242);
+app.listen(80);
 // const port = 3000; //add your port here
 
 app.use(express.json());
