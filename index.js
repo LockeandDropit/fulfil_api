@@ -20,6 +20,7 @@ app.use(
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   })
 );
+
 //for testing, remove when done
 app.listen(80);
 // const port = 3000; //add your port here
@@ -101,8 +102,8 @@ app.post("/create-stripe-account-web", async (req, res) => {
     // return_url: "http://localhost:3001/DoerAccountManager",
     const accountLink = await stripe.accountLinks.create({
       account: account.id,
-      refresh_url: "https:/getfulfil.com/DoerAccountManager",
-      return_url: "https:/getfulfil.com/DoerAccountManager",
+      refresh_url: "https://getfulfil.com/DoerAccountManager",
+      return_url: "https://getfulfil.com/DoerAccountManager",
       type: "account_onboarding",
     });
 
@@ -284,8 +285,8 @@ app.post("/create-checkout-web", async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.create({
       success_url:
-        "https:/getfulfil.com/NeederPaymentComplete/success?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "https:/getfulfil.com/NeederInReviewList",
+        "https://getfulfil.com/NeederPaymentComplete/success?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://getfulfil.com/NeederInReviewList",
       payment_method_types: ["card"],
       line_items: [
         {
@@ -372,7 +373,8 @@ app.post("/create-checkout-web-embedded", async (req, res) => {
         },
       },
       return_url:
-      "https:/getfulfil.com/NeederInReviewList/?session_id={CHECKOUT_SESSION_ID}",
+      "https://getfulfil.com/NeederInReviewList/?session_id={CHECKOUT_SESSION_ID}",
+    
     });
 
 
@@ -382,7 +384,7 @@ app.post("/create-checkout-web-embedded", async (req, res) => {
     // return session
     res.send({clientSecret: session.client_secret});
     
-    console.log(session.metadata.jobTitle)
+    console.log(session.client_secret)
   } catch (err) {
     console.log("error Im looking for", err);
     res.json({ error: err });
