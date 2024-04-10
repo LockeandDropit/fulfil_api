@@ -373,16 +373,19 @@ app.post("/create-checkout-web-embedded", async (req, res) => {
         },
       },
       return_url:
-      "https://getfulfil.com/NeederInReviewList/?session_id={CHECKOUT_SESSION_ID}",
+      "https://getfulfil.com/NeederPaymentComplete/?session_id={CHECKOUT_SESSION_ID}",
+    
     
     });
 
 
   
+//test
+res.send({clientSecret: session.client_secret});
 
 
     // return session
-    res.send({clientSecret: session.client_secret});
+    // res.send({clientSecret: session.client_secret});
     
     console.log(session.client_secret)
   } catch (err) {
