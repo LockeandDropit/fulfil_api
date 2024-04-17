@@ -426,3 +426,33 @@ app.post("/check-payment-status", async (req, res) => {
 
   res.json({ session: session });
 });
+
+
+
+//credit / help from https://github.com/pagecow/stripe-subscribe-payments
+app.post("/create-subscription-session", async (req, res) => {
+  try {
+    const session = await stripe.checkout.sessions.create({
+      success_url: "https://getfulfil.com/DoerPaymentComplete/?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://getfulfil.com/DoerMapScreen",
+      line_items: [
+        {
+          price: STRIPE_PRICE_ID,
+          quantity: 1,
+        },
+      ],
+      mode: 'subscription',
+    });
+    console.log("session: ", session.id, session.url, session)
+
+    // get id, save to user, return url
+    const sessionId = session.id;
+    console.log("sessionId: ", sessionId);
+
+    // save session.id to the user in your database
+
+    res.json({ url: session.url })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
