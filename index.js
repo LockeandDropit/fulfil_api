@@ -22,7 +22,7 @@ app.use(
 );
 
 //for testing, remove when done
-// app.listen(80);
+app.listen(80);
 // const port = 3000; //add your port here
 
 app.use(express.json());
