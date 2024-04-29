@@ -8,21 +8,21 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-  })
-);
-
 // app.use(
-//   cors ({
-//     origin: 'https://getfulfil.com',
-//     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+//   cors({
+//     origin: "http://localhost:3000",
 //   })
 // );
 
+app.use(
+  cors ({
+    origin: 'https://getfulfil.com',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  })
+);
+
 //for testing, remove when done
-app.listen(80);
+// app.listen(80);
 // const port = 3000; //add your port here
 
 app.use(express.json());
@@ -464,7 +464,7 @@ app.post("/create-subscription-session", async (req, res) => {
 
 app.post('/check-subscription-status', async (req, res) => {
   const session = await stripe.checkout.sessions.retrieve(req.body.sessionID);
-console.log("subscription infos")
+
   res.send({
     status: session.status,
     customer_email: session.customer_details.email,
