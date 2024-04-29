@@ -8,18 +8,18 @@ dotenv.config();
 
 const app = express();
 
-// app.use(
-//   cors({
-//     origin: "http://localhost:3000",
-//   })
-// );
-
 app.use(
-  cors ({
-    origin: 'https://getfulfil.com',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  cors({
+    origin: "http://localhost:3000",
   })
 );
+
+// app.use(
+//   cors ({
+//     origin: 'https://getfulfil.com',
+//     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+//   })
+// );
 
 //for testing, remove when done
 app.listen(80);
@@ -31,13 +31,13 @@ app.use(express.urlencoded({ extended: true }));
 import Stripe from "stripe";
 import { log } from "util";
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2022-08-01",
-});
-
-// const stripe = Stripe(process.env.STRIPE_TEST_KEY, {
+// const stripe = Stripe(process.env.STRIPE_SECRET_KEY, {
 //   apiVersion: "2022-08-01",
 // });
+
+const stripe = Stripe(process.env.STRIPE_TEST_KEY, {
+  apiVersion: "2022-08-01",
+});
 
 console.log("hello");
 
@@ -431,13 +431,14 @@ app.post("/check-payment-status", async (req, res) => {
 
 //credit / help from https://github.com/pagecow/stripe-subscribe-payments
 app.post("/create-subscription-session", async (req, res) => {
+  console.log("got em")
   try {
     const session = await stripe.checkout.sessions.create({
-      success_url: "https://getfulfil.com/DoerPaymentComplete/?session_id={CHECKOUT_SESSION_ID}",
+      success_url: "https://getfulfil.com/DoerSubscriptionComplete",
       cancel_url: "https://getfulfil.com/DoerMapScreen",
       line_items: [
         {
-          price: STRIPE_PRICE_ID,
+          price: "price_1P6f8GGOViWTUZKUIKej9h57",
           quantity: 1,
         },
       ],
@@ -450,9 +451,23 @@ app.post("/create-subscription-session", async (req, res) => {
     console.log("sessionId: ", sessionId);
 
     // save session.id to the user in your database
+    res.json({session: session})
 
-    res.json({ url: session.url })
+    //original
+    // res.json({ url: session.url })
   } catch (e) {
     res.status(500).json({ error: e.message })
+    console.log(e)
   }
 })
+
+
+app.post('/check-subscription-status', async (req, res) => {
+  const session = await stripe.checkout.sessions.retrieve(req.body.sessionID);
+console.log("subscription infos")
+  res.send({
+    status: session.status,
+    customer_email: session.customer_details.email,
+
+  });
+});
