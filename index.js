@@ -438,7 +438,7 @@ app.post("/create-subscription-session", async (req, res) => {
       cancel_url: "https://getfulfil.com/DoerMapScreen",
       line_items: [
         {
-          price: "price_1P6f8GGOViWTUZKUIKej9h57",
+          price: "price_1P6eBoGOViWTUZKUttCMySKJ",
           quantity: 1,
         },
       ],
