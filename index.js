@@ -408,13 +408,9 @@ console.log("hirt")
 
 app.get('/single-post-session-status', async (req, res) => {
   const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
-console.log("hirt")
+console.log("single post hit")
   res.send({
-    userID : session.metadata.neederUID,
-    jobTitle: session.metadata.jobTitle,
     status: session.status,
-    customer_email: session.customer_details.email,
-    confirmedPrice: session.metadata.confirmedPrice
   });
 });
 
@@ -496,7 +492,7 @@ app.post("/create-checkout-single-post", async (req, res) => {
       payment_method_types: ["card"],
       line_items: [
         {
-          price: "price_1P6eBoGOViWTUZKUttCMySKJ",
+          price: "price_1PQFV9GOViWTUZKUXyV3F2uB",
           quantity: 1,
         },
       ],
