@@ -406,6 +406,18 @@ console.log("hirt")
   });
 });
 
+app.get('/single-post-session-status', async (req, res) => {
+  const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+console.log("hirt")
+  res.send({
+    userID : session.metadata.neederUID,
+    jobTitle: session.metadata.jobTitle,
+    status: session.status,
+    customer_email: session.customer_details.email,
+    confirmedPrice: session.metadata.confirmedPrice
+  });
+});
+
 
 app.post("/stripe-log-in", async (req, res) => {
   const stripeID = req.body.stripeID
@@ -470,4 +482,45 @@ app.post('/check-subscription-status', async (req, res) => {
     customer_email: session.customer_details.email,
 
   });
+});
+
+
+app.post("/create-checkout-single-post", async (req, res) => {
+
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      ui_mode: "embedded",
+
+     
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: "price_1P6eBoGOViWTUZKUttCMySKJ",
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      return_url:
+      "https://getfulfil.com/Homepage/?session_id={CHECKOUT_SESSION_ID}",
+    
+   
+    
+    
+    });
+
+
+  
+//test
+res.send({clientSecret: session.client_secret});
+
+
+    // return session
+    // res.send({clientSecret: session.client_secret});
+    
+    console.log(session.client_secret)
+  } catch (err) {
+    console.log("error Im looking for", err);
+    res.json({ error: err });
+  }
 });
