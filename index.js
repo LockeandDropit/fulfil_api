@@ -408,7 +408,7 @@ console.log("hirt")
 
 app.get('/single-post-session-status', async (req, res) => {
   const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
-console.log("single post hit")
+console.log("single post hit", session.status)
   res.send({
     status: session.status,
   });
