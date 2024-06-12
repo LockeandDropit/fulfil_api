@@ -524,6 +524,7 @@ res.send({clientSecret: session.client_secret});
 
 app.post("/create-business-subscription-session", async (req, res) => {
 
+  console.log("create subscription back end")
 
   try {
     const session = await stripe.checkout.sessions.create({
