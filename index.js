@@ -567,7 +567,14 @@ res.send({clientSecret: session.client_secret});
 app.get('/business-subscription-session-status', async (req, res) => {
   const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
 console.log("business hit", session.status)
+
+  //LIVE
+  // res.send({
+  //   status: session.status,
+  // });
+
+  // TEST
   res.send({
-    status: session.status,
+    status: "complete",
   });
 });
