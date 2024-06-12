@@ -534,7 +534,7 @@ app.post("/create-business-subscription-session", async (req, res) => {
       payment_method_types: ["card"],
       line_items: [
         {
-          price: "price_1PQbMIGOViWTUZKUzbrxVjpU",
+          price: "price_1PQsaEGOViWTUZKUizxO2MTo",
           quantity: 1,
         },
       ],
@@ -569,12 +569,12 @@ app.get('/business-subscription-session-status', async (req, res) => {
 console.log("business hit", session.status)
 
   //LIVE
-  // res.send({
-  //   status: session.status,
-  // });
+  res.send({
+    status: session.status,
+  });
 
   // TEST
-  res.send({
-    status: "complete",
-  });
+  // res.send({
+  //   status: "complete",
+  // });
 });
