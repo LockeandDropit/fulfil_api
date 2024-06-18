@@ -539,6 +539,14 @@ app.post("/create-business-subscription-session", async (req, res) => {
         },
       ],
       mode: 'subscription',
+      subscription_data: {
+        trial_settings: {
+          end_behavior: {
+            missing_payment_method: 'cancel',
+          },
+        },
+        trial_period_days: 30,
+      },
       return_url:
       "https://getfulfil.com/Homepage/?session_id={CHECKOUT_SESSION_ID}",
     
