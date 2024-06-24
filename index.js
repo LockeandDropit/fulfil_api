@@ -571,6 +571,55 @@ res.send({clientSecret: session.client_secret});
   }
 });
 
+app.post("/create-business-subscription-session-starter", async (req, res) => {
+
+  console.log("create subscription back end")
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      ui_mode: "embedded",
+
+     
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: "price_1PVFRLGOViWTUZKUF5cBzPXV",
+          quantity: 1,
+        },
+      ],
+      mode: 'subscription',
+      subscription_data: {
+        trial_settings: {
+          end_behavior: {
+            missing_payment_method: 'cancel',
+          },
+        },
+        trial_period_days: 30,
+      },
+      return_url:
+      "https://getfulfil.com/Homepage/?session_id={CHECKOUT_SESSION_ID}",
+    
+   
+    
+    
+    });
+
+
+  
+//test
+res.send({clientSecret: session.client_secret});
+
+
+    // return session
+    // res.send({clientSecret: session.client_secret});
+    
+    console.log(session.client_secret)
+  } catch (err) {
+    console.log("error Im looking for", err);
+    res.json({ error: err });
+  }
+});
+
 
 app.get('/business-subscription-session-status', async (req, res) => {
   const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
