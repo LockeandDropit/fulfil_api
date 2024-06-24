@@ -534,7 +534,8 @@ app.post("/create-business-subscription-session", async (req, res) => {
       payment_method_types: ["card"],
       line_items: [
         {
-          price: "price_1PQsaEGOViWTUZKUizxO2MTo",
+          
+          price: "price_1PQbMIGOViWTUZKUzbrxVjpU",
           quantity: 1,
         },
       ],
@@ -578,8 +579,6 @@ app.post("/create-business-subscription-session-starter", async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.create({
       ui_mode: "embedded",
-
-     
       payment_method_types: ["card"],
       line_items: [
         {
