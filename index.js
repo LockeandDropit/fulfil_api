@@ -535,7 +535,7 @@ app.post("/create-business-subscription-session", async (req, res) => {
       line_items: [
         {
           
-          price: "price_1PQbMIGOViWTUZKUzbrxVjpU",
+          price: "price_1PY8q2GOViWTUZKUV6SoImRD",
           quantity: 1,
         },
       ],
@@ -582,7 +582,7 @@ app.post("/create-business-subscription-session-starter", async (req, res) => {
       payment_method_types: ["card"],
       line_items: [
         {
-          price: "price_1PVFRLGOViWTUZKUF5cBzPXV",
+          price: "price_1PY8p0GOViWTUZKUgYLDpvUn",
           quantity: 1,
         },
       ],
